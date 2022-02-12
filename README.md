@@ -1,5 +1,7 @@
 # conflict-mls-citygml-detection
 
+[![DOI](https://zenodo.org/badge/422141978.svg)](https://zenodo.org/badge/latestdoi/422141978)
+
 ## Implementation overview
 
 The implementation of the presented methodology consists of several tools:
