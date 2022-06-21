@@ -13,8 +13,9 @@ The implementation can be divided into several steps:
 
 *full overview diagram - pending*
 
-
 ## Paper
+
+For the in-depth understanding to not hesitate to check out the paper:
 
 ```plain
 @article{WysockiRefiningByUnderpasses,
@@ -30,3 +31,7 @@ author = {Olaf Wysocki and Ludwig Hoegner and Uwe Stilla},
 keywords = {MLS point clouds, Building reconstruction, Semantic 3D building models, Underpasses, Buildings refinement, Bayesian networks, Uncertainty},
 }
 ```
+
+## Contact details
+
+Should you have any further questions do not hesitate to ask me: olaf.wysocki@tum.de
