@@ -4,7 +4,14 @@
 
 ## Implementation overview
 
-*pending*
+The implementation can be divided into several steps:
+1. Ray casting (C++) 
+2. Comparison of point clouds and city models (FME)
+3. Projecting textures to models (FME)
+4. Deriving probability scores (FME + R)
+5. Geometry and semantic modeling (FME)
+
+*full overview diagram - pending*
 
 
 ## Paper
