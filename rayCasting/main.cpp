@@ -31,7 +31,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-//#include <octomap/octomap.h>
+#include <octomap/octomap.h>
 #include <octomap/OcTree.h>
 #include <pcl/point_cloud.h>
 #include <pcl/point_types.h>
@@ -45,7 +45,6 @@ using namespace std;
 using namespace octomap;
 using namespace pcl;
 
-string outpath = "";
 
 void saveCloud(OcTree& tree){
     //init counters
@@ -120,91 +119,25 @@ void saveCloud(OcTree& tree){
     mlsFreePcl.is_dense = false;
     mlsFreePcl.points.resize (mlsFreePcl.width * mlsFreePcl.height);
 
-    string fileNameOccupied = "mlsOccupied.pcd";
-    string fileNameFree =  "mlsFree.pcd";
-    string outpath1 = outpath + fileNameOccupied;
-    string outpath2 = outpath + fileNameFree;
+    string outpath1 = "/home/olaf/Olaf/PhD/pfg2021/data/utm/mlsOccupiedFree/mlsOccupied.pcd";
+    string outpath2 = "/home/olaf/Olaf/PhD/pfg2021/data/utm/mlsOccupiedFree/mlsFree.pcd";
     pcl::io::savePCDFile (outpath1, mlsOccupiedPcl, false);
     pcl::io::savePCDFile (outpath2, mlsFreePcl, false);
 
 }
 
 
-int main(int argc, char *argv[]) {
-    if (argc != 3)
-    { cout<<"Wron no. of parameters! Please provide 1 + 2 (program name + parameters) parameters"<<endl<< "Parameter #1: Program name"<<endl<< "Parameter #2: Input point clouds path"<<endl<< "Parameter #3: Output point clouds (voxels) path"<<endl;
-        return 0;
-    }
-    if (argc == 3) {
-        cout << "Your selected paths: " << endl << "Input point clouds: " << argv[1]
-            << endl
-             << endl << "Output point clouds (voxels): " << endl << argv[2]
-             << endl;
-    }
+int main(int /*argc*/, char** /*argv*/) {
 
     //global paths to files
-    const char *cloudPath = argv[1];
-    string cPath = argv[1];
-
-    //e.g,:
-    //const char *cloudPath = "/home/olaf/Olaf/PhD/pfg2021/data/utm/laserscanner1/";
-    //string cPath = "/home/olaf/Olaf/PhD/pfg2021/data/utm/laserscanner1/";
-
-    //global out-path for files
-    string oPath = argv[2];
-    outpath.append(oPath);
-
-    //e.g,:
-    // /home/olaf/Olaf/PhD/pfg2021/data/utm/mlsOccupiedFree/...;
+    const char *cloudPath = "/home/olaf/Olaf/PhD/pfg2021/data/utm/laserscanner1/";
+    string cPath = "/home/olaf/Olaf/PhD/pfg2021/data/utm/laserscanner1/";
 
     //BBox search for selected bld (id: DEBY_LOD2_4959458_B)  --> how about using the BBox from loaded citygml blds and buffer them?
-
-    //ID: DEBY_LOD2_4959458_B (OK)
-//    unsigned int Xmin = 260;
-//    unsigned int Ymin = 225;
-//    unsigned int Xmax = 325;
-//    unsigned int Ymax = 262;
-
-    //ID: DEBY_LOD2_4959460 (OK)
-//    unsigned int Xmin = 228;
-//    unsigned int Ymin = 268;
-//    unsigned int Xmax = 349;
-//    unsigned int Ymax = 354;
-
-    //ID: DEBY_LOD2_4959462 (OK)
-//    unsigned int Xmin = 301;
-//    unsigned int Ymin = 240;
-//    unsigned int Xmax = 332;
-//    unsigned int Ymax = 285;
-
-    //ID: DEBY_LOD2_4906970 (OK)
-//    unsigned int Xmin = 190;
-//    unsigned int Ymin = 36;
-//    unsigned int Xmax = 211;
-//    unsigned int Ymax = 55;
-
-    //ID: DEBY_LOD2_4959323 (OK)
-//    unsigned int Xmin = 315;
-//    unsigned int Ymin = 163;
-//    unsigned int Xmax = 361;
-//    unsigned int Ymax = 235;
-
-    //ID: DEBY_LOD2_4959322 (...)
-//    unsigned int Xmin = 308;
-//    unsigned int Ymin = 218;
-//    unsigned int Xmax = 343;
-//    unsigned int Ymax = 245;
-
-    //ID: DEBY_LOD2_4906981 (...)
-    unsigned int Xmin = 253;
-    unsigned int Ymin = 8;
-    unsigned int Xmax = 300;
-    unsigned int Ymax = 81;
-
-
-
-    cout << endl;
-    cout << "Selected BBox: " << "[Xmin: " << Xmin << " Ymin: " << Ymin << " Xmax: " << Xmax << " Ymax: " << Ymax << "]" << endl;
+    unsigned int Xmin = 260;
+    unsigned int Ymin = 225;
+    unsigned int Xmax = 325;
+    unsigned int Ymax = 262;
 
     //TEST
     //int testSetMLS = 10;
@@ -236,7 +169,7 @@ int main(int argc, char *argv[]) {
         while ((ent = readdir (dir)) != NULL) {
             //printf ("%s\n", ent->d_name);
             string fName = ent->d_name;
-                if (fName != "." && fName != ".." && fName != "..."){ //peculiar file names elimination
+                if (fName != "." && fName != ".." && fName != "..."){ //strange file names elimination, is there a better way?
                     mlsFilesCounter.push_back(1);
                     string fPath;
                     fPath = cPath + fName;
@@ -270,7 +203,6 @@ int main(int argc, char *argv[]) {
         initCloudCounter += 1;
         cout << endl;
         cout << "In cloud count: " << initCloudCounter << endl << "  Cloud name: " << cloudName << endl;
-
 
         //inserting MLS measurements and performing ray casting
         for (auto p:cloud->points) {
