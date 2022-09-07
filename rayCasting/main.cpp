@@ -31,7 +31,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <octomap/octomap.h>
+//#include <octomap/octomap.h>
 #include <octomap/OcTree.h>
 #include <pcl/point_cloud.h>
 #include <pcl/point_types.h>
@@ -45,6 +45,7 @@ using namespace std;
 using namespace octomap;
 using namespace pcl;
 
+string outpath = "";
 
 void saveCloud(OcTree& tree){
     //init counters
@@ -119,25 +120,61 @@ void saveCloud(OcTree& tree){
     mlsFreePcl.is_dense = false;
     mlsFreePcl.points.resize (mlsFreePcl.width * mlsFreePcl.height);
 
-    string outpath1 = "/home/olaf/Olaf/PhD/pfg2021/data/utm/mlsOccupiedFree/mlsOccupied.pcd";
-    string outpath2 = "/home/olaf/Olaf/PhD/pfg2021/data/utm/mlsOccupiedFree/mlsFree.pcd";
+    string fileNameOccupied = "mlsOccupied.pcd";
+    string fileNameFree =  "mlsFree.pcd";
+    string outpath1 = outpath + fileNameOccupied;
+    string outpath2 = outpath + fileNameFree;
     pcl::io::savePCDFile (outpath1, mlsOccupiedPcl, false);
     pcl::io::savePCDFile (outpath2, mlsFreePcl, false);
 
 }
 
 
-int main(int /*argc*/, char** /*argv*/) {
+int main(int argc, char *argv[]) {
+    if (argc != 3)
+    { cout<<"Wron no. of parameters! Please provide 1 + 2 (program name + parameters) parameters"<<endl<< "Parameter #1: Program name"<<endl<< "Parameter #2: Input point clouds path"<<endl<< "Parameter #3: Output point clouds (voxels) path"<<endl;
+        return 0;
+    }
+    if (argc == 3) {
+        cout << "Your selected paths: " << endl << "Input point clouds: " << argv[1]
+            << endl
+             << endl << "Output point clouds (voxels): " << endl << argv[2]
+             << endl;
+    }
 
     //global paths to files
-    const char *cloudPath = "/home/olaf/Olaf/PhD/pfg2021/data/utm/laserscanner1/";
-    string cPath = "/home/olaf/Olaf/PhD/pfg2021/data/utm/laserscanner1/";
+    const char *cloudPath = argv[1];
+    string cPath = argv[1];
 
-    //BBox search for selected bld (id: DEBY_LOD2_4959458_B)  --> how about using the BBox from loaded citygml blds and buffer them?
-    unsigned int Xmin = 260;
-    unsigned int Ymin = 225;
-    unsigned int Xmax = 325;
-    unsigned int Ymax = 262;
+    //e.g,:
+    //const char *cloudPath = "/home/olaf/Olaf/PhD/pfg2021/data/utm/laserscanner1/";
+    //string cPath = "/home/olaf/Olaf/PhD/pfg2021/data/utm/laserscanner1/";
+
+    //global out-path for files
+    string oPath = argv[2];
+    outpath.append(oPath);
+
+    //e.g,:
+    // /home/olaf/Olaf/PhD/pfg2021/data/utm/mlsOccupiedFree/...;
+
+    //BBox search for selected bld
+
+    //e.g., ID: DEBY_LOD2_4906981 (...)
+//     unsigned int Xmin = 253;
+//     unsigned int Ymin = 8;
+//     unsigned int Xmax = 300;
+//     unsigned int Ymax = 81;
+    unsigned int Xmin = 0;
+    unsigned int Ymin = 0;
+    unsigned int Xmax = 1000;
+    unsigned int Ymax = 1000;
+
+
+
+    cout << endl;
+    cout << "Selected BBox: " << "[Xmin: " << Xmin << " Ymin: " << Ymin << " Xmax: " << Xmax << " Ymax: " << Ymax << "]" << endl;
+    cout << endl;
+    cout << "Make sure that the selected BBox is correct"  << endl;
 
     //TEST
     //int testSetMLS = 10;
@@ -169,7 +206,7 @@ int main(int /*argc*/, char** /*argv*/) {
         while ((ent = readdir (dir)) != NULL) {
             //printf ("%s\n", ent->d_name);
             string fName = ent->d_name;
-                if (fName != "." && fName != ".." && fName != "..."){ //strange file names elimination, is there a better way?
+                if (fName != "." && fName != ".." && fName != "..."){ //peculiar file names elimination
                     mlsFilesCounter.push_back(1);
                     string fPath;
                     fPath = cPath + fName;
@@ -204,11 +241,11 @@ int main(int /*argc*/, char** /*argv*/) {
         cout << endl;
         cout << "In cloud count: " << initCloudCounter << endl << "  Cloud name: " << cloudName << endl;
 
+
         //inserting MLS measurements and performing ray casting
         for (auto p:cloud->points) {
             /*
             - Use insert ray to perform ray casting
-
             - As the dataset is organized in a following way: x, y, z, vp_x, vp_y, vp_z
             a direct usage of functions like 'insertPointCloudRay' is not possible as they
             assume single sensor origin per one point cloud, which in the case of the input
