@@ -33,8 +33,7 @@ include_directories(${OCTOMAP_INCLUDE_DIRS})
 link_directories(${OCTOMAP_LIBRARY_DIRS})
 link_libraries(${OCTOMAP_LIBRARIES} ${PCL_LIBRARIES} ${OpenCV_LIBS})
 
-add_executable(octoViewPts main.cpp)
-
+add_executable(octo main.cpp)
 
 
 
