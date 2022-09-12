@@ -15,7 +15,7 @@ The implementation can be divided into several steps:
 
 ## Paper
 
-For the in-depth understanding to not hesitate to check out the paper:
+For the in-depth understanding do not hesitate to check out the paper:
 
 ```plain
 @article{WysockiRefiningByUnderpasses,
